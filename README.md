@@ -24,3 +24,21 @@ Then run:
 air
 ```
 >Your application will compile and start. Air will automatically monitor your Go source files and restart the application whenever a change is detected and saved.
+
+## 🐳 Database Setup
+
+Use Docker Compose to quickly spin up your local database service:
+
+```bash
+docker-compose up -d
+```
+
+Create a new migration file:
+```bash
+docker run --rm -v $(pwd)/cmd/migrate/migrations:/migrations migrate/migrate create -ext sql -dir /migrations -seq create_users_table
+```
+
+Run migrations:
+```bash
+docker compose run migrate
+```

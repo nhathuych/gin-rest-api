@@ -1,0 +1,26 @@
+services:
+  db:
+    image: postgres:18.1-alpine3.23
+    environment:
+      - POSTGRES_DB=gin-rest-api-development
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - gin_rest_api_postgres_data:/var/lib/postgresql/data
+
+  migrate:
+    image: migrate/migrate:latest
+    command: [
+      "-path=/migrations",
+      "-database=postgres://postgres:postgres@db:5432/gin-rest-api-development?sslmode=disable",
+      "up"
+    ]
+    volumes:
+      - ./cmd/migrate/migrations:/migrations
+    depends_on:
+      - db
+
+volumes:
+  gin_rest_api_postgres_data:
