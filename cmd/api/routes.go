@@ -28,6 +28,8 @@ func (app *application) routes() http.Handler {
 	authGroup := v1.Group("/")
 	authGroup.Use(app.AuthMiddleware())
 	{
+		authGroup.GET("/users", app.getAllUsers)
+
 		authGroup.POST("/events", app.createEvent)
 		authGroup.PUT("/events/:id", app.updateEvent)
 		authGroup.DELETE("/events/:id", app.deleteEvent)
