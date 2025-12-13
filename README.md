@@ -25,12 +25,21 @@ air
 ```
 >Your application will compile and start. Air will automatically monitor your Go source files and restart the application whenever a change is detected and saved.
 
-## 🐳 Database Setup
+## 🔐 Environment Variables
 
+Before running the application, create a `.env` file from the example:
+
+```bash
+cp .env.example .env
+```
+
+## 🛢️ Database Setup
+
+### 🐳 Docker Compose Setup
 Use Docker Compose to quickly spin up your local database service:
 
 ```bash
-docker-compose up -d
+docker compose up -d
 ```
 
 Create a new migration file:
@@ -41,4 +50,21 @@ docker run --rm -v $(pwd)/cmd/migrate/migrations:/migrations migrate/migrate cre
 Run migrations:
 ```bash
 docker compose run migrate
+```
+
+### 🖥️ Local PostgreSQL Setup (Using Go Binary)
+
+Create a new migration file:
+```bash
+migrate create -ext sql -dir cmd/migrate/migrations -seq create_users_table
+```
+
+Apply Migrations (Up):
+```bash
+go run ./cmd/migrate/main.go up
+```
+
+Rollback Migrations (Down):
+```bash
+go run ./cmd/migrate/main.go down
 ```

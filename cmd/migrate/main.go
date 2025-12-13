@@ -8,19 +8,21 @@ import (
 	"github.com/golang-migrate/migrate/v4"
 	"github.com/golang-migrate/migrate/v4/database/postgres"
 	_ "github.com/golang-migrate/migrate/v4/source/file"
+	"github.com/joho/godotenv"
 	_ "github.com/lib/pq"
 )
 
 func main() {
+	_ = godotenv.Load()
 	if len(os.Args) < 2 {
 		log.Fatal("Usage: migrate [up|down]")
 	}
 
 	direction := os.Args[1]
 
-	url := os.Getenv("POSTGRES_URL")
+	url := os.Getenv("DATABASE_URL")
 	if url == "" {
-		log.Fatal("POSTGRES_URL is not set")
+		log.Fatal("DATABASE_URL is not set")
 	}
 
 	db, err := sql.Open("postgres", url)
