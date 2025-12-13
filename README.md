@@ -68,3 +68,16 @@ Rollback Migrations (Down):
 ```bash
 go run ./cmd/migrate/main.go down
 ```
+
+## 📘 Swagger API Documentation
+
+🛠️ Generate Swagger Docs
+
+```bash
+swag init --dir ./cmd/api --output ./docs --parseDependency --parseInternal --parseDepth 1
+```
+
+🌐 Access Swagger UI
+```bash
+http://localhost:8080/swagger
+```
