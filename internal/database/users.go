@@ -1,6 +1,10 @@
 package database
 
-import "database/sql"
+import (
+	"context"
+	"database/sql"
+	"time"
+)
 
 type UserModel struct {
 	DB *sql.DB // connect object to PostgreSQL
@@ -11,4 +15,33 @@ type User struct {
 	Email    string `json:"email"`
 	Name     string `json:"name"`
 	Password string `json:"-"`
+}
+
+func (um *UserModel) Insert(user *User) error {
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+	defer cancel()
+
+	query := `INSERT INTO users (name, email, password) VALUES ($1, $2, $3) RETURNING id`
+	return um.DB.QueryRowContext(ctx, query, user.Name, user.Email, user.Password).Scan(&user.Id)
+}
+
+func (um *UserModel) getUser(query string, args ...interface{}) (*User, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+	defer cancel()
+
+	var user User
+	err := um.DB.QueryRowContext(ctx, query, args...).Scan(&user.Id, &user.Email, &user.Name, &user.Password)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return nil, nil
+		}
+		return nil, err
+	}
+
+	return &user, nil
+}
+
+func (um *UserModel) Get(id int) (*User, error) {
+	query := "SELECT * FROM users WHERE id = $1"
+	return um.getUser(query, id)
 }

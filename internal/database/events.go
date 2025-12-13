@@ -32,7 +32,7 @@ func (em *EventModel) GetAll() ([]*Event, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()
 
-	query := "SELECT * FROM events"
+	query := "SELECT * FROM events ORDER BY id DESC"
 
 	rows, err := em.DB.QueryContext(ctx, query)
 	if err != nil {
