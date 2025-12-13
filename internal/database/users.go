@@ -45,3 +45,8 @@ func (um *UserModel) Get(id int) (*User, error) {
 	query := "SELECT * FROM users WHERE id = $1"
 	return um.getUser(query, id)
 }
+
+func (um *UserModel) GetByEmail(email string) (*User, error) {
+	query := "SELECT * FROM users WHERE email = $1"
+	return um.getUser(query, email)
+}
